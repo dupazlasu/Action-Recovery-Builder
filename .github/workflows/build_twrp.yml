@@ -69,6 +69,13 @@ jobs:
         git clone https://github.com/dupazlasu/android_device_samsung_s5e9925.git -b android-12.1 ./device/samsung/s5e9925
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
+    - name: Get device tree commit
+      run: |
+        cd device/samsung/s5e9925
+        echo "DEVICE_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      id: commit
+
     - name: Set Swap Space
       uses: pierotofy/set-swap-space@master
       with:
@@ -107,5 +114,6 @@ jobs:
           Manifest: twrp-12.1
           Device: ${{ matrix.target }}
           Target: recovery
+          Commit: ${{ steps.commit.outputs.DEVICE_COMMIT }}
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
